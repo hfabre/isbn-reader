@@ -33,7 +33,7 @@ async function scan(barcodeDetector, video) {
         document.getElementById("barcode").value = barcodes[0].rawValue;
 
         // Notify user that a barcode has been found.
-        toast.success("Barcode detected")
+        // toast.success("Barcode detected")
 
         // Give the user time to find another product to scan
         await new Promise(r => setTimeout(r, 1000));
@@ -45,11 +45,11 @@ function searchBook() {
     fetchPromise.then(response => {
         return response.json()
     }).then(json => {
-        toast.success("Book found")
+        // toast.success("Book found")
         title = json.items[0].volumeInfo.title
         document.getElementById("title").value = title
     }).catch(err => {
-        toast.error("Failed to find book: " + err)
+        // toast.error("Failed to find book: " + err)
         console.log(err)
         document.getElementById("title").value = err
     });
@@ -62,14 +62,14 @@ function pushBook() {
       });
     fetchPromise.then(response => {
         if (response.status == 200) {
-            toast.success("Added to the spreadsheet")
+            // toast.success("Added to the spreadsheet")
             document.getElementById("title").value = ""
             document.getElementById("barcode").value = ""
         } else {
-            toast.error("Failed to add to the spreadsheet: " + response.status)
+            // toast.error("Failed to add to the spreadsheet: " + response.status)
         }
     }).catch(err => {
-        toast.error("Failed to add to the spreadsheet: " + err)
+        // toast.error("Failed to add to the spreadsheet: " + err)
         console.log(err)
     });
 }

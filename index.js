@@ -56,7 +56,7 @@ function searchBook() {
 }
 
 function pushBook() {
-    const fetchPromise = fetch("http://localhost:4567/update", {
+    const fetchPromise = fetch("https://cp-api.hfabre.ovh/update", {
         method: "PUT",
         body: JSON.stringify({ token: document.getElementById("token").value, values: [document.getElementById("barcode").value, document.getElementById("title").value] }),
       });

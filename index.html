@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isbn reader</title>
+  <!-- <link rel="icon" type="image/png" href="logo.png" /> -->
+  <link rel="stylesheet" href="style.css">
+  <!-- WebAssembly polyfill for some browsers -->
+  <script src="https://cdn.jsdelivr.net/npm/@undecaf/zbar-wasm@0.9.15/dist/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.20/dist/index.js"></script>
+  <script src="http://catdad.github.io/tiny.cdn/lib/toast/1.0.0/toast.min.js"></script>
+  <script src="index.js"></script>
+</head>
+
+<body>
+    <div>
+      <span>Api Token:</span>
+      <input type="text" id="token"/>
+    </div>
+    <!-- Show the camera feed to help the user capture the barcode -->
+    <video id="video" autoplay></video>
+
+    <div>
+        <input type="text" id="barcode" placeholder="Waiting..." />
+        <button type="button" id="search" onclick="searchBook();"> Search </button>
+        <input type="text" id="title" placeholder="title" />
+        <button type="button" id="save" onclick="pushBook();"> Save </button>
+    </div>
+</body>
+</html>

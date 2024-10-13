@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem "googleauth"
+gem "google-apis-sheets_v4"
+gem "sinatra"
+gem "rackup"
+gem "sinatra-cors"

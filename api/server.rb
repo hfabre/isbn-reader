@@ -1,8 +1,8 @@
-require 'googleauth'
-require 'google/apis/sheets_v4'
+require "googleauth"
+require "google/apis/sheets_v4"
 
 class SpreadsheetUpdater
-  SCOPE = ['https://www.googleapis.com/auth/spreadsheets'].freeze
+  SCOPE = ["https://www.googleapis.com/auth/spreadsheets"].freeze
 
   def initialize(sheet_name, spreadsheet_id, cred_path = "credentials.json")
     @authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
@@ -32,7 +32,7 @@ class SpreadsheetUpdater
       @spreadsheet_id,
       new_range,
       value_range_object,
-      value_input_option: 'RAW'
+      value_input_option: "RAW"
     )
     puts "#{response.updated_cells} cells updated."
   rescue Google::Apis::Error => e
@@ -40,8 +40,8 @@ class SpreadsheetUpdater
   end
 end
 
-require 'json'
-require 'sinatra'
+require "json"
+require "sinatra"
 require "sinatra/cors"
 
 set :allow_origin, "*"
@@ -51,7 +51,7 @@ set :expose_headers, "location,link"
 
 service = SpreadsheetUpdater.new(ENV.fetch("SHEET_NAME"), ENV.fetch("SHEET_ID"), ENV.fetch("CREDENTIALS_PATH"))
 
-put '/update' do
+put "/update" do
   payload = JSON.parse(request.body.read)
   halt 401 if payload["token"] != ENV.fetch("TOKEN")
   service.push_column_values(payload["values"])

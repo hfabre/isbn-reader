@@ -1,3 +1,5 @@
+var notyf = new Notyf();
+
 window.onload = function() {
     (async () => {
         // Define video as the video element. You can pass the element to the barcode detector.
@@ -32,8 +34,7 @@ async function scan(barcodeDetector, video) {
         // One can also do "preferred symbology" logic here.
         document.getElementById("barcode").value = barcodes[0].rawValue;
 
-        // Notify user that a barcode has been found.
-        // toast.success("Barcode detected")
+        notyf.success("Barcode detected")
 
         // Give the user time to find another product to scan
         await new Promise(r => setTimeout(r, 1000));
@@ -45,11 +46,11 @@ function searchBook() {
     fetchPromise.then(response => {
         return response.json()
     }).then(json => {
-        // toast.success("Book found")
+        notyf.success("Book found")
         title = json.items[0].volumeInfo.title
         document.getElementById("title").value = title
     }).catch(err => {
-        // toast.error("Failed to find book: " + err)
+        notyf.error("Failed to find book: " + err);
         console.log(err)
         document.getElementById("title").value = err
     });
@@ -62,14 +63,14 @@ function pushBook() {
       });
     fetchPromise.then(response => {
         if (response.status == 200) {
-            // toast.success("Added to the spreadsheet")
+            notyf.success("Added to the spreadsheet")
             document.getElementById("title").value = ""
             document.getElementById("barcode").value = ""
         } else {
-            // toast.error("Failed to add to the spreadsheet: " + response.status)
+            notyf.error("Failed to add to the spreadsheet: " + response.status);
         }
     }).catch(err => {
-        // toast.error("Failed to add to the spreadsheet: " + err)
+        notyf.error("Failed to add to the spreadsheet: " + err);
         console.log(err)
     });
 }

@@ -5,31 +5,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Isbn reader</title>
-  <!-- <link rel="icon" type="image/png" href="logo.png" /> -->
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-  <!-- WebAssembly polyfill for some browsers -->
   <script src="https://cdn.jsdelivr.net/npm/@undecaf/zbar-wasm@0.9.15/dist/index.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.20/dist/index.js"></script>
-
   <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="index.js"></script>
-    <div>
-      <span>Api Token:</span>
-      <input type="text" id="token"/>
-    </div>
-    <!-- Show the camera feed to help the user capture the barcode -->
-    <video id="video" autoplay></video>
 
-    <div>
-        <input type="text" id="barcode" placeholder="Waiting..." />
-        <button type="button" id="search" onclick="searchBook();"> Search </button>
-        <input type="text" id="title" placeholder="title" />
-        <button type="button" id="save" onclick="pushBook();"> Save </button>
+    <div class="container">
+      <div class="token-section">
+        <span>Api Token:</span>
+        <input type="text" id="token" class="input-field"/>
+      </div>
+
+      <video id="video" autoplay></video>
+
+      <div class="form-section">
+        <div class="step">
+          <input type="text" id="barcode" class="input-field" placeholder="Waiting..." />
+          <button type="button" id="search" class="btn" onclick="searchBook();">Search</button>
+        </div>
+
+        <div class="step">
+          <input type="text" id="title" class="input-field" placeholder="Title" />
+          <button type="button" id="save" class="btn" onclick="pushBook();">Save</button>
+        </div>
+      </div>
     </div>
 </body>
 </html>

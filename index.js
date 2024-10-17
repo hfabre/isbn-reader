@@ -52,11 +52,20 @@ async function scan(barcodeDetector, video) {
 function searchBook() {
     const fetchPromise = fetch("https://www.googleapis.com/books/v1/volumes?q=isbn:" + document.getElementById("barcode").value);
     fetchPromise.then(response => {
-        return response.json()
+        if (response.status == 200) {
+            return response.json()
+        } else {
+            notyf.error("Failed to fetch book: " + response.status);
+        }
     }).then(json => {
-        notyf.success("Book found")
-        title = json.items[0].volumeInfo.title
-        document.getElementById("title").value = title
+        if (json.totalItems != 0) {
+            notyf.success("Book found")
+            title = json.items[0].volumeInfo.title
+            document.getElementById("title").value = title
+        } else {
+            notyf.error("Book not found");
+            document.getElementById("title").value = "Unknown"
+        }
     }).catch(err => {
         notyf.error("Failed to find book: " + err);
         console.log(err)

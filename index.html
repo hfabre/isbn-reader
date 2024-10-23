@@ -32,6 +32,12 @@
         </div>
 
         <div class="step">
+          <select name="sheet-name" id="sheet-name" required>
+            <option value="">Selectionner un lieu</option>
+            <option value="salle">salle</option>
+            <option value="bateau">bateau</option>
+            <option value="autre">autre</option>
+          </select>
           <input type="text" id="title" class="input-field" placeholder="Title" />
           <button type="button" id="save" class="btn" onclick="pushBook();">Save</button>
         </div>

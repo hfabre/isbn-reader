@@ -74,9 +74,15 @@ function searchBook() {
 }
 
 function pushBook() {
-    const fetchPromise = fetch("https://cp-api.hfabre.ovh/update", {
+    // "https://cp-api.hfabre.ovh/add-book"
+    const fetchPromise = fetch("http://localhost:4567/add-book", {
         method: "PUT",
-        body: JSON.stringify({ token: document.getElementById("token").value, values: [document.getElementById("barcode").value, document.getElementById("title").value] }),
+        body: JSON.stringify({
+            token: document.getElementById("token").value,
+            isbn: document.getElementById("barcode").value,
+            title: document.getElementById("title").value,
+            sheet_name: document.getElementById("sheet-name").value
+        }),
       });
     fetchPromise.then(response => {
         if (response.status == 200) {
@@ -84,7 +90,7 @@ function pushBook() {
             document.getElementById("title").value = ""
             document.getElementById("barcode").value = ""
         } else {
-            notyf.error("Failed to add to the spreadsheet: " + response.status);
+            notyf.error("Failed to add to the spreadsheet: " + response.status, + "(" + response.body + ")");
         }
     }).catch(err => {
         notyf.error("Failed to add to the spreadsheet: " + err);

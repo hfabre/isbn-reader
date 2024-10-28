@@ -1,115 +1,194 @@
-/* All this is from chatgpt, too lazy */
+/* Too lazy, all this is from chatgpt */
+
+/* Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  body {
-    font-family: 'Poppins', sans-serif;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #f0f0f5;
-    overflow: hidden;
-    color: #333;
-  }
+body {
+  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #f0f0f5;
+  overflow: hidden;
+  color: #333;
+}
 
-  /* Container centré */
+/* Header resserré pour le mode actuel */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 0;
+  background-color: #e0e0e0;
+  border-bottom: 1px solid #ccc;
+  color: #555;
+  font-size: 14px;
+}
+
+.header span {
+  font-weight: bold;
+  color: #444;
+}
+
+.header button {
+  padding: 5px 10px;
+  font-size: 13px;
+  color: #333;
+  background-color: #c4c4c4;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.header button:hover {
+  background-color: #b0b0b0;
+}
+
+/* Container centré et compact */
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px 10px;
+  max-height: calc(100vh - 100px);
+  margin-top: 5px; /* Rapproche du header */
+}
+
+.token-section {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+input {
+  font-family: inherit;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Étapes avec champ et bouton côte à côte, rapprochés */
+.step {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  width: 80%;
+  max-width: 450px;
+}
+
+/* Vidéo */
+#video {
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Champ de texte */
+.input-field {
+  padding: 8px;
+  width: 70%;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+/* Boutons neutres */
+.btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #333;
+  background-color: #d3d3d3;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #c0c0c0;
+  color: #222;
+}
+
+/* Boutons spécifiques aux modes */
+.btn.store {
+  background-color: #bababa;
+}
+
+.btn.store:hover {
+  background-color: #a5a5a5;
+}
+
+.btn.drawback {
+  background-color: #bababa;
+}
+
+.btn.drawback:hover {
+  background-color: #a5a5a5;
+}
+
+/* Selecteur de feuille */
+#sheet-name {
+  padding: 8px;
+  font-size: 14px;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  width: 30%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-right: 8px;
+}
+
+#sheet-name:hover, #sheet-name:focus {
+  background-color: #f7f7f7;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Notification */
+.notification-space {
+  height: 50px;
+  background-color: #e0e0e0;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
   .container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    max-height: calc(100vh - 60px);
+    padding: 15px;
   }
 
-  /* Section de l'API Token */
-  .token-section {
-    margin-bottom: 20px;
-    color: #555;
-  }
-
-  input {
-    font-family: inherit;
-  }
-
-  .form-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  /* Etape avec champ et bouton côte à côte */
   .step {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    width: 80%;
-    max-width: 500px;
+    width: 60%;
   }
 
-  /* Vidéo */
   #video {
-    width: 100%;
     max-width: 500px;
-    height: auto;
-    margin-bottom: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
-
-  /* Champ de texte */
-  .input-field {
-    padding: 10px;
-    margin-right: 10px;
-    width: 70%;
-    font-size: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-    transition: box-shadow 0.3s ease;
-  }
-
-  .input-field:focus {
-    outline: none;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
-  }
-
-  /* Boutons neutres */
-  .btn {
-    padding: 10px 20px;
-    font-size: 14px;
-    color: #333;
-    background-color: #e0e0e0;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    width: 30%;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .btn:hover {
-    background-color: #d0d0d0;
-    color: #000;
-  }
-
-  @media (min-width: 768px) {
-    .container {
-      padding: 20px;
-    }
-
-    .step {
-      width: 60%;
-    }
-
-    #video {
-      max-width: 600px;
-    }
-  }
+}

@@ -42,35 +42,59 @@ class SpreadsheetUpdater
   end
 
   def add_quantity(sheet_name, isbn, name)
-    range = "#{sheet_name}!A:C"
-    response = @sheets_service.get_spreadsheet_values(@spreadsheet_id, range)
-    rows = response.values || []
-
-    row_to_update = rows.find_index { |row| row[0] == isbn }
+    rows = get_rows(sheet_name)
+    row_to_update =  find_row_index(rows, sheet_name, isbn)
 
     if row_to_update
-      # Si l'ISBN existe, on met à jour la quantité (colonne C)
-      quantity = rows[row_to_update][2].to_i + 1
-      update_range = "#{sheet_name}!C#{row_to_update + 1}"
-
-      value_range_object = Google::Apis::SheetsV4::ValueRange.new(
-        range: update_range,
-        values: [[quantity]]
-      )
-      @sheets_service.update_spreadsheet_value(
-        @spreadsheet_id,
-        update_range,
-        value_range_object,
-        value_input_option: "RAW"
-      )
-      puts "Quantity updated"
+      update_quantity(rows, row_to_update, sheet_name, 1)
     else
-      # Si l'ISBN n'existe pas, on ajoute une nouvelle ligne avec quantité 1
       push_column_values(sheet_name, isbn, name)
     end
   rescue Google::Apis::Error, SpreadsheetUpdaterError => e
     puts "Error : #{e.message}"
     raise SpreadsheetUpdaterError.new("#{e}")
+  end
+
+  def decrement_quantity(sheet_name, isbn)
+    rows = get_rows(sheet_name)
+    row_to_update =  find_row_index(rows, sheet_name, isbn)
+
+    if row_to_update
+      update_quantity(rows, row_to_update, sheet_name, -1)
+    end
+  rescue Google::Apis::Error => e
+    puts "Error : #{e.message}"
+    raise SpreadsheetUpdaterError.new("#{e}")
+  end
+
+  private
+
+  def update_quantity(rows, row_to_update, sheet_name, quantity)
+    quantity = rows[row_to_update][2].to_i + quantity
+    update_range = "#{sheet_name}!C#{row_to_update + 1}"
+
+    value_range_object = Google::Apis::SheetsV4::ValueRange.new(
+      range: update_range,
+      values: [[quantity]]
+    )
+    @sheets_service.update_spreadsheet_value(
+      @spreadsheet_id,
+      update_range,
+      value_range_object,
+      value_input_option: "RAW"
+    )
+    puts "Quantity updated"
+  end
+
+
+  def get_rows(sheet_name)
+    range = "#{sheet_name}!A:C"
+    response = @sheets_service.get_spreadsheet_values(@spreadsheet_id, range)
+    rows = response.values || []
+  end
+
+  def find_row_index(rows, sheet_name, isbn)
+    rows.find_index { |row| row[0] == isbn }
   end
 end
 
@@ -91,6 +115,16 @@ put "/add-book" do
 
   puts payload
   service.add_quantity(payload["sheet_name"], payload["isbn"], payload["title"])
+rescue SpreadsheetUpdaterError => e
+  halt(400, {error: e.message}.to_json)
+end
+
+put "/drawback-book" do
+  payload = JSON.parse(request.body.read)
+  halt 401, {error: "Bad token"}.to_json if payload["token"] != ENV.fetch("TOKEN")
+
+  puts payload
+  service.decrement_quantity(payload["sheet_name"], payload["isbn"])
 rescue SpreadsheetUpdaterError => e
   halt(400, {error: e.message}.to_json)
 end

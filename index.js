@@ -10,17 +10,29 @@ var notyf = new Notyf();
 
 window.onload = function() {
     (async () => {
-        // Define video as the video element. You can pass the element to the barcode detector.
-        const video = document.getElementById('video');
-
-        // Create a BarcodeDetector for simple retail operations.
-        const barcodeDetector = new BarcodeDetector();
-
-        // Get a stream for the rear camera, else the front (or side?) camera.
-        video.srcObject = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'environment' } });
-        video.addEventListener("play", () => scan(barcodeDetector, video));
+        changeMode("drawback")
+        startCamera();
     })();
 };
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+      }
+    } else if (document.visibilityState === "visible") {
+      startCamera();
+    }
+});
+
+async function startCamera() {
+    const video = document.getElementById('video');
+    const barcodeDetector = new BarcodeDetector();
+    // Get a stream for the rear camera, else the front (or side?) camera.
+    video.srcObject = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'environment' } });
+    video.addEventListener("play", () => scan(barcodeDetector, video));
+}
 
 async function scan(barcodeDetector, video) {
     // Let's scan barcodes forever
@@ -96,4 +108,50 @@ function pushBook() {
         notyf.error("Failed to add to the spreadsheet: " + err);
         console.log(err)
     });
+}
+
+function drawbackBook() {
+    // "https://cp-api.hfabre.ovh/drawback-book"
+    const fetchPromise = fetch("http://localhost:4567/drawback-book", {
+        method: "PUT",
+        body: JSON.stringify({
+            token: document.getElementById("token").value,
+            isbn: document.getElementById("barcode").value,
+            sheet_name: document.getElementById("sheet-name").value
+        }),
+      });
+    fetchPromise.then(response => {
+        if (response.status == 200) {
+            notyf.success("Drawback from the spreadsheet")
+            document.getElementById("title").value = ""
+            document.getElementById("barcode").value = ""
+        } else {
+            notyf.error("Failed to drawback from the spreadsheet: " + response.status, + "(" + response.body + ")");
+        }
+    }).catch(err => {
+        notyf.error("Failed to drawback from the spreadsheet: " + err);
+        console.log(err)
+    });
+}
+
+function changeMode(mode) {
+    if (mode === "store") {
+        Array.from(document.getElementsByClassName("drawback")).forEach(element => {
+            element.hidden = true
+        });
+
+        Array.from(document.getElementsByClassName("store")).forEach(element => {
+            element.hidden = false
+        });
+        document.getElementById("current-mode").innerText = "achat"
+    } else if (mode === "drawback") {
+        Array.from(document.getElementsByClassName("drawback")).forEach(element => {
+            element.hidden = false
+        });
+
+        Array.from(document.getElementsByClassName("store")).forEach(element => {
+            element.hidden = true
+        });
+        document.getElementById("current-mode").innerText = "Inventaire"
+    }
 }

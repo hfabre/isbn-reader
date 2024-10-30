@@ -91,7 +91,7 @@ input {
 /* Vidéo */
 #video {
   width: 100%;
-  max-width: 300px;
+  max-width: 450px;
   height: auto;
   margin-bottom: 15px;
   border-radius: 12px;
@@ -236,4 +236,19 @@ td.status-success {
 
 td.status-error {
   color: #f44336; /* couleur d'erreur */
+}
+
+@media (max-width: 480px) {
+  /* Ajuste la vidéo pour les petits écrans */
+  #video {
+      width: 100%; /* Utilise toute la largeur du conteneur */
+      height: auto; /* Conserve le ratio de la vidéo */
+      max-height: 200px; /* Limite la hauteur pour libérer de l'espace */
+  }
+  .container {
+      padding: 10px; /* Réduit le padding pour économiser de l'espace */
+  }
+  .header {
+      font-size: 0.9em; /* Taille de police légèrement réduite */
+  }
 }

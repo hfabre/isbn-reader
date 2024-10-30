@@ -21,9 +21,10 @@
       Mode actuel: <span id="current-mode"></span>
       <button onclick="changeMode('drawback');">Achat</button>
       <button onclick="changeMode('store');">Inventaire</button>
+      <button onclick="changeMode('offline');">Hors-ligne</button>
     </div>
 
-    <div class="container">
+    <div id="main" class="container">
       <div class="token-section">
         <span>Api Token:</span>
         <input type="text" id="token" class="input-field"/>
@@ -46,9 +47,15 @@
           </select>
           <input type="text" id="title" class="input-field store" placeholder="Title" />
           <button type="button" id="save" class="btn store" onclick="pushBook();">Save</button>
-          <button type="button" id="drawback" class="btn drawback" onclick="drawbackBook();">Drawback</button>
+          <button type="button" id="drawback" class="btn drawback" onclick="drawbackBookOffline();">Drawback</button>
         </div>
       </div>
+    </div>
+
+    <div id="offline" class="container">
+      <div id="local-storage-data"></div>
+      <button type="button" id="drawback-from-local-storage" class="btn" onclick="drawbackFromLocalStorage();">Save all</button>
+      <button type="button" id="clear" class="btn" onclick="clearLocalStorage();">Clear</button>
     </div>
 </body>
 </html>

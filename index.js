@@ -7,6 +7,9 @@ if ('serviceWorker' in navigator) {
   }
 
 var notyf = new Notyf();
+// "https://cp-api.hfabre.ovh/"
+// "http://localhost:4567/"
+const baseUrl = "https://cp-api.hfabre.ovh/";
 
 window.onload = function() {
     (async () => {
@@ -86,8 +89,7 @@ function searchBook() {
 }
 
 function pushBook() {
-    // "https://cp-api.hfabre.ovh/add-book"
-    const fetchPromise = fetch("http://localhost:4567/add-book", {
+    const fetchPromise = fetch(baseUrl + "add-book", {
         method: "PUT",
         body: JSON.stringify({
             token: document.getElementById("token").value,
@@ -110,48 +112,125 @@ function pushBook() {
     });
 }
 
-function drawbackBook() {
-    // "https://cp-api.hfabre.ovh/drawback-book"
-    const fetchPromise = fetch("http://localhost:4567/drawback-book", {
+function drawbackBook(token, barcode, sheetName) {
+    const fetchPromise = fetch(baseUrl + "drawback-book", {
         method: "PUT",
         body: JSON.stringify({
-            token: document.getElementById("token").value,
-            isbn: document.getElementById("barcode").value,
-            sheet_name: document.getElementById("sheet-name").value
+            token: token,
+            isbn: barcode,
+            sheet_name: sheetName
         }),
       });
-    fetchPromise.then(response => {
+    result = fetchPromise.then(response => {
         if (response.status == 200) {
-            notyf.success("Drawback from the spreadsheet")
             document.getElementById("title").value = ""
             document.getElementById("barcode").value = ""
+            return { success: true, msg: "Successfully drawback book" }
         } else {
-            notyf.error("Failed to drawback from the spreadsheet: " + response.status, + "(" + response.body + ")");
+            return { success: false, msg: "Failed to drawback " + barcode + " from the spreadsheet: " + response.status + "(" + response.body + ")" }
         }
     }).catch(err => {
-        notyf.error("Failed to drawback from the spreadsheet: " + err);
-        console.log(err)
+        return { success: false, msg: "Failed to drawback " + barcode + " from the spreadsheet: " + err}
     });
+
+    return result;
 }
 
 function changeMode(mode) {
     if (mode === "store") {
+        document.getElementById("offline").style.display = "none";
+        document.getElementById("main").style.display = "";
         Array.from(document.getElementsByClassName("drawback")).forEach(element => {
-            element.hidden = true
+            element.style.display = "none";
         });
 
         Array.from(document.getElementsByClassName("store")).forEach(element => {
-            element.hidden = false
-        });
-        document.getElementById("current-mode").innerText = "achat"
-    } else if (mode === "drawback") {
-        Array.from(document.getElementsByClassName("drawback")).forEach(element => {
-            element.hidden = false
-        });
-
-        Array.from(document.getElementsByClassName("store")).forEach(element => {
-            element.hidden = true
+            element.style.display = "";
         });
         document.getElementById("current-mode").innerText = "Inventaire"
+    } else if (mode === "drawback") {
+        document.getElementById("offline").style.display = "none";
+        document.getElementById("main").style.display = "";
+        Array.from(document.getElementsByClassName("drawback")).forEach(element => {
+            element.style.display = "";
+        });
+
+        Array.from(document.getElementsByClassName("store")).forEach(element => {
+            element.style.display = "none";
+        });
+        document.getElementById("current-mode").innerText = "Achat"
+    } else if (mode === "offline") {
+        document.getElementById("main").style.display = "none";
+        document.getElementById("offline").style.display = "";
+
+        let tableHtml = "<table><thead><tr><th>Token</th><th>ISBN</th><th>Sheet</th><th>Résultat</th></tr></thead><tbody>"
+
+        let isbnQueue = JSON.parse(localStorage.getItem("isbnQueue")) || [];
+        if (isbnQueue.length > 0) {
+            isbnQueue.forEach((entry, index) => {
+                tableHtml += `
+                    <tr id="isbn-${index}">
+                        <td>${entry.token}</td>
+                        <td>${entry.barcode}</td>
+                        <td>${entry.sheetName}</td>
+                        <td id="isbn-${index}-status"> waiting </td>
+                    </tr>
+                `;
+            });
+        }
+        tableHtml += "</tbody></table>";
+
+        document.getElementById("local-storage-data").innerHTML = tableHtml;
+        document.getElementById("current-mode").innerText = "Hors-ligne"
+    }
+}
+
+function addISBNOffline(token, barcode, sheetName) {
+    let isbnQueue = JSON.parse(localStorage.getItem("isbnQueue")) || [];
+    isbnQueue.push({ token, barcode, sheetName });
+    localStorage.setItem("isbnQueue", JSON.stringify(isbnQueue));
+    notyf.success("ISBN added to offline queue")
+}
+
+function drawbackBookOffline() {
+    const token = document.getElementById("token").value
+    const barcode = document.getElementById("barcode").value;
+    const sheetName = document.getElementById("sheet-name").value;
+
+    if (navigator.onLine) {
+        promise = drawbackBook(token, barcode, sheetName);
+        promise.then(result => {
+            if(result.success) {
+                notyf.success(result.msg)
+                document.getElementById("barcode").value = ""
+            } else {
+                notyf.error(result.msg)
+            }
+        })
+    } else {
+        addISBNOffline(token, barcode, sheetName);
+    }
+}
+
+function clearLocalStorage() {
+    document.getElementById("local-storage-data").innerHTML = "";
+    localStorage.setItem("isbnQueue", JSON.stringify([]));
+}
+
+function drawbackFromLocalStorage() {
+    let isbnQueue = JSON.parse(localStorage.getItem("isbnQueue")) || [];
+    if (isbnQueue.length > 0) {
+        isbnQueue.forEach((entry, index) => {
+            promise = drawbackBook(entry.token, entry.barcode, entry.sheetName);
+            promise.then(result => {
+                if(result.success) {
+                    document.getElementById("isbn-" + index + "-status").innerText = "Success"
+                    document.getElementById("isbn-" + index + "-status").classList.add("status-success");
+                } else {
+                    document.getElementById("isbn-" + index + "-status").innerText = "Failure: " + result.msg
+                    document.getElementById("isbn-" + index + "-status").classList.add("status-error");
+                }
+            })
+        });
     }
 }

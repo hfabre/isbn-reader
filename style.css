@@ -91,7 +91,7 @@ input {
 /* Vidéo */
 #video {
   width: 100%;
-  max-width: 450px;
+  max-width: 300px;
   height: auto;
   margin-bottom: 15px;
   border-radius: 12px;
@@ -191,4 +191,49 @@ input {
   #video {
     max-width: 500px;
   }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* En-tête du tableau */
+thead th {
+  padding: 10px;
+  background-color: #7c7f7c;
+  color: #ffffff;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* Corps du tableau */
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #dddddd;
+  color: #333;
+}
+
+/* Lignes impaires pour alternance */
+tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+/* Statut en attente */
+td[id*='status'] {
+  font-weight: bold;
+  color: #ff9800; /* couleur d'attente */
+}
+
+/* Statut synchronisé */
+td.status-success {
+  color: #4CAF50; /* couleur de succès */
+}
+
+td.status-error {
+  color: #f44336; /* couleur d'erreur */
 }

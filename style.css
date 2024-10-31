@@ -209,6 +209,8 @@ thead th {
   color: #ffffff;
   font-weight: 500;
   text-align: left;
+  position: sticky;
+  top: 0;
 }
 
 /* Corps du tableau */

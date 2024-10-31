@@ -46,9 +46,9 @@ async function scan(barcodeDetector, video) {
         // Continue loop if no barcode was found.
         if (barcodes.length == 0)
         {
-            // Scan interval 50 ms like in other barcode scanner demos.
+            // Scan interval 200 ms like in other barcode scanner demos.
             // The higher the interval the longer the battery lasts.
-            await new Promise(r => setTimeout(r, 50));
+            await new Promise(r => setTimeout(r, 200));
             continue;
         }
 
@@ -89,6 +89,7 @@ function searchBook() {
 }
 
 function pushBook() {
+    document.getElementById("save").disabled = true;
     const fetchPromise = fetch(baseUrl + "add-book", {
         method: "PUT",
         body: JSON.stringify({
@@ -110,6 +111,7 @@ function pushBook() {
         notyf.error("Failed to add to the spreadsheet: " + err);
         console.log(err)
     });
+    document.getElementById("save").disabled = false;
 }
 
 function drawbackBook(token, barcode, sheetName) {
@@ -193,7 +195,9 @@ function addISBNOffline(token, barcode, sheetName) {
 }
 
 function drawbackBookOffline() {
-    const token = document.getElementById("token").value
+    document.getElementById("drawback").disabled = true;
+
+    const token = document.getElementById("token").value;
     const barcode = document.getElementById("barcode").value;
     const sheetName = document.getElementById("sheet-name").value;
 
@@ -210,6 +214,7 @@ function drawbackBookOffline() {
     } else {
         addISBNOffline(token, barcode, sheetName);
     }
+    document.getElementById("drawback").disabled = false;
 }
 
 function clearLocalStorage() {
@@ -218,6 +223,7 @@ function clearLocalStorage() {
 }
 
 function drawbackFromLocalStorage() {
+    document.getElementById("drawback-from-local-storage").disabled = true;
     let isbnQueue = JSON.parse(localStorage.getItem("isbnQueue")) || [];
     if (isbnQueue.length > 0) {
         isbnQueue.forEach((entry, index) => {
@@ -233,4 +239,5 @@ function drawbackFromLocalStorage() {
             })
         });
     }
+    document.getElementById("drawback-from-local-storage").disabled = false;
 }

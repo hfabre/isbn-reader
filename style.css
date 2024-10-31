@@ -252,3 +252,14 @@ td.status-error {
       font-size: 0.9em; /* Taille de police légèrement réduite */
   }
 }
+
+button:disabled {
+  background-color: #ccc; /* Couleur de fond grisée */
+  color: #666; /* Couleur de texte plus claire */
+  cursor: not-allowed; /* Curseur non autorisé */
+  opacity: 0.6; /* Rend le bouton un peu plus transparent */
+}
+
+.scrollable {
+  overflow: auto; /* Active le scroll */
+}

@@ -106,18 +106,9 @@ set :allow_origin, "*"
 set :allow_methods, "PUT,OPTIONS"
 set :allow_headers, "X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept, if-modified-since"
 set :expose_headers, "location,link"
+set :lock, true
 
 service = SpreadsheetUpdater.new(ENV.fetch("SHEET_ID"), ENV.fetch("CREDENTIALS_PATH"))
-
-put "/add-book" do
-  payload = JSON.parse(request.body.read)
-  halt 401, {error: "Bad token"}.to_json if payload["token"] != ENV.fetch("TOKEN")
-
-  puts payload
-  service.add_quantity(payload["sheet_name"], payload["isbn"], payload["title"])
-rescue SpreadsheetUpdaterError => e
-  halt(400, {error: e.message}.to_json)
-end
 
 put "/drawback-book" do
   payload = JSON.parse(request.body.read)

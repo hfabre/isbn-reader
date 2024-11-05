@@ -265,3 +265,10 @@ button:disabled {
 .scrollable {
   overflow: auto; /* Active le scroll */
 }
+
+.button-container {
+  display: flex;
+  gap: 10px; /* Espacement entre les boutons */
+  justify-content: center; /* Centre les boutons horizontalement */
+  margin-top: 10px;
+}

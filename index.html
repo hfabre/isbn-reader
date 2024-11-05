@@ -20,8 +20,7 @@
     <div class="header">
       Mode actuel: <span id="current-mode"></span>
       <button onclick="changeMode('drawback');">Achat</button>
-      <button onclick="changeMode('store');">Inventaire</button>
-      <button onclick="changeMode('offline');">Hors-ligne</button>
+      <button onclick="changeMode('offline');">Traitement achats</button>
     </div>
 
     <div id="main" class="container">
@@ -35,7 +34,6 @@
       <div class="form-section">
         <div class="step">
           <input type="text" id="barcode" class="input-field" placeholder="Scan barcode..." />
-          <button type="button" id="search" class="btn store" onclick="searchBook();">Search</button>
         </div>
 
         <div class="step">
@@ -48,8 +46,6 @@
             <option value="autre">Autre</option>
             <option value="test">Test</option>
           </select>
-          <input type="text" id="title" class="input-field store" placeholder="Title" />
-          <button type="button" id="save" class="btn store" onclick="pushBook();">Save</button>
           <button type="button" id="drawback" class="btn drawback" onclick="drawbackBookOffline();">Drawback</button>
         </div>
       </div>
@@ -57,8 +53,10 @@
 
     <div id="offline" class="container">
       <div id="local-storage-data" class="scrollable"></div>
-      <button type="button" id="drawback-from-local-storage" class="btn" onclick="drawbackFromLocalStorage();">Save all</button>
-      <button type="button" id="clear" class="btn" onclick="clearLocalStorage();">Clear</button>
+      <div class="offline-button-container">
+        <button type="button" id="clear" class="btn" onclick="clearLocalStorage();">Clear</button>
+        <button type="button" id="drawback-from-local-storage" class="btn" onclick="drawbackFromLocalStorage();">Save all</button>
+      </div>
     </div>
 </body>
 </html>

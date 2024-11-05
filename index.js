@@ -142,7 +142,7 @@ function drawbackBookOffline() {
         return;
     }
 
-    console.log("Trying to drawback: " + barcode + "against " + expectedIsbn.length + "isbn")
+    console.log("Trying to drawback: " + barcode + " against " + expectedIsbn.length + " isbn")
     if (expectedIsbn.indexOf(barcode) != -1) {
         addISBNOffline(token, barcode, sheetName);
         document.getElementById("barcode").value = "";
